@@ -22,19 +22,11 @@ while decision not in ["y", "n"]:
         "\nDou you need a tutorial? [y = yes, n = no]: ").lower()
 if decision == 'y':
     time.sleep(1)
-    print('\n\nDefault path for Your incoming screenshots folder is Your desktop, however You can change it if You like :)\n')
+    print('\n\nPath to Your incoming screenshots folder is Your desktop\n')
     time.sleep(3)
     print('After providing nessesary inputs mark with a mouse which region You would like to him to watch for changes')
 
-decision2 = input(
-    "\nDo you want to change tha default path? [y = yes, n = no]: ").lower()
-while decision2 not in ["y", "n"]:
-    decision2 = input(
-        "\nDo you want to change tha default path? [y = yes, n = no]: ").lower()
-if decision2 == 'y':
-    basebath = input('Provide a proper path: ')
-else:
-    basepath = winshell.desktop()
+basepath = winshell.desktop()
 
 # takes parent dir name (subject name) and child dir name (current date) for convenience
 name = input('\n\nFolder name: ')
@@ -100,7 +92,7 @@ im.save(f'{basepath}\\{name}\\{date}\\{i}.jpg')
 def shotAndSave():
     global i
     global im
-    time.sleep(5)
+    time.sleep(2)
     im1 = pyautogui.screenshot(region=(x0, y0, x1-x0, y1-y0))
 
     def rmsdiffFunc(im, im1):
@@ -119,8 +111,11 @@ def shotAndSave():
 
     # decides if the rmsdiif variable is big enough to make another screenshot
     if rmsdiff > 25:
-        i += 1
-        # print(rmsdiff)
+        # checking latest file number each time before saving new screenshot
+        dirlist = glob.glob(f'{basepath}\\{name}\\{date}\\*.jpg')
+        latest_file = max(dirlist, key=os.path.getctime)
+        latest_file_name = latest_file.split('\\')[-1].split('.')[0]
+        i = int(latest_file_name) + 1
         im1.save(f'{basepath}\\{name}\\{date}\\{i}.jpg')
         im = im1
 
